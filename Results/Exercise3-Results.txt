@@ -1,0 +1,126 @@
+
+================================================================================================================================
+
+For exercise 3, I modified each document to be a list of all word vectors representing the words in the document, in order.  I also normalized the document length to be 1024 tokens long.  For documents that exceeded this value, the document was cropped to fit.  For documents below this value, the document was filled out with vectors of 0s.  I used GloVe's 100-length feature vectors for this process.  This means every document was represented by 1024 vectors of length 100, for a total of 102400 values.
+
+I attempted many network structures to try improve my results.  I even set up methodology of cleanly defining structures as values that I could generate and test at random.  Doing so, I allowed my computer to run and test numerous models until I began to home in on something close to optimal.  The code for this process is located in "Ex3Permutations.py".  In theory, one could apply a machine learning methodology to this process as well, for a sort of meta-learning.
+
+The parameters I tweaked were number of convolutional layers, amount of pooling between layers, the length of vectors after all convolutions (final pool size), and the number of outputs from the first dense layer.  Generally, it seemed that 2 convolutional layers performed best, with a small final pool size.  The network I settled on was structured like:
+
+(1024,100) --> CONVOLUTION --(256x4)--> CONVOLUTION --(256x4)--> MAXPOOLING --(2x4)--> FLATTEN --(8)--> DENSE --(128)--> DENSE --(1)--> OUTPUT
+
+I also utilized relu activation in both of the convolution layers as well as the first dense layer, and a sigmoid activator for the final layer.  I used RMSProp as an optimization method.
+
+The results I obtained were generally excellent.  Across 10 folds I had a mean accuracy of 92%, but every fold starting with the 4th had 100% accuracy, leading to a median accuracy of 100%.  
+
+These models took significantly longer to process, even when running GPU.  There are an incredibly high number weights to calculate, including 102400 weights from the input (although, it is likely simpler than this due to how convolutions behave), 1024 from each of the convolutional layers, plus 129 from the dense layers.  The layered nature of this, causing dependency between the weights, also increased the complexity and contributed to the increased computation time.
+
+The code for this exercise can be found in "Ex3.py"
+
+
+================================================================================================================================
+OUTPUT FROM CODE:
+
+
+Loading word vectors...
+Loading files...
+Processing files...
+Building network...
+Fitting and evaluating network...
+
+NEW MODEL (#1) = {'layerSizes': [256, 256], 'filterSizes': [4, 4], 'finalPool': 2, 'denseSize': 128}
+Fold #1:
+------------------
+Epoch 1/2
+1800/1800 [==============================] - 58s - loss: 0.7760 - acc: 0.5022    
+Epoch 2/2
+1800/1800 [==============================] - 57s - loss: 0.6751 - acc: 0.5661    
+200/200 [==============================] - 1s     
+Fold accuracy = 0.54
+
+Fold #2:
+------------------
+Epoch 1/2
+1800/1800 [==============================] - 56s - loss: 0.6176 - acc: 0.6956    
+Epoch 2/2
+1800/1800 [==============================] - 64s - loss: 0.4529 - acc: 0.8111    
+200/200 [==============================] - 2s     
+Fold accuracy = 0.8
+
+Fold #3:
+------------------
+Epoch 1/2
+1800/1800 [==============================] - 51s - loss: 0.3167 - acc: 0.8772    
+Epoch 2/2
+1800/1800 [==============================] - 52s - loss: 0.1275 - acc: 0.9650    
+200/200 [==============================] - 2s     
+Fold accuracy = 0.86
+
+Fold #4:
+------------------
+Epoch 1/2
+1800/1800 [==============================] - 56s - loss: 0.1086 - acc: 0.9678    
+Epoch 2/2
+1800/1800 [==============================] - 72s - loss: 0.0809 - acc: 0.9844    
+200/200 [==============================] - 2s     
+Fold accuracy = 1.0
+
+Fold #5:
+------------------
+Epoch 1/2
+1800/1800 [==============================] - 57s - loss: 0.0491 - acc: 0.9856    
+Epoch 2/2
+1800/1800 [==============================] - 51s - loss: 0.0656 - acc: 0.9872    
+200/200 [==============================] - 1s     
+Fold accuracy = 1.0
+
+Fold #6:
+------------------
+Epoch 1/2
+1800/1800 [==============================] - 57s - loss: 0.0713 - acc: 0.9867    
+Epoch 2/2
+1800/1800 [==============================] - 66s - loss: 0.0212 - acc: 0.9911    
+200/200 [==============================] - 2s     
+Fold accuracy = 1.0
+
+Fold #7:
+------------------
+Epoch 1/2
+1800/1800 [==============================] - 68s - loss: 0.0455 - acc: 0.9922    
+Epoch 2/2
+1800/1800 [==============================] - 69s - loss: 0.0494 - acc: 0.9894    
+200/200 [==============================] - 2s     
+Fold accuracy = 1.0
+
+Fold #8:
+------------------
+Epoch 1/2
+1800/1800 [==============================] - 70s - loss: 0.0347 - acc: 0.9883    
+Epoch 2/2
+1800/1800 [==============================] - 65s - loss: 0.0011 - acc: 1.0000    
+200/200 [==============================] - 2s     
+Fold accuracy = 1.0
+
+Fold #9:
+------------------
+Epoch 1/2
+1800/1800 [==============================] - 57s - loss: 0.0638 - acc: 0.9928    
+Epoch 2/2
+1800/1800 [==============================] - 61s - loss: 0.0677 - acc: 0.9883    
+200/200 [==============================] - 4s     
+Fold accuracy = 1.0
+
+Fold #10:
+------------------
+Epoch 1/2
+1800/1800 [==============================] - 64s - loss: 0.0010 - acc: 1.0000    
+Epoch 2/2
+1800/1800 [==============================] - 66s - loss: 0.1222 - acc: 0.9844    
+200/200 [==============================] - 2s     
+Fold accuracy = 1.0
+
+AVERAGE ACCURACY = 0.92
+
+
+
+

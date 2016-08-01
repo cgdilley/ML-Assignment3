@@ -1,0 +1,35 @@
+
+================================================================================================================================
+
+
+I achieved satisfactory results when using logistic regression as a model.  Processing the data was a time consuming process, but the actual training and testing was relatively quick.  With unigrams I had an average accuracy of 81.65%, and with bigrams 74.15%.
+
+There were a total of 15283 unique unigrams found with a frequency of 5 or greater, and a total of 40864 bigrams with a frequency of 5 or greater.  The bigrams do not span across sentences, but dummy tags have been added at the beginning and end of each sentence to form bigrams with sentence-initial and sentence-final words.
+
+For each document a vector was created representing the relative frequency of all unigrams and bigrams in the text that met the frequency threshold.  This means that in the unigram model each document was represented with a vector of size 15283, and for bigrams, a vector of size 40864.  These numbers would represent the number of weights that would have to be calculated based on the training set of 1800 documents.
+
+The code for exercise one is identical inside the files "Ex1,2(OH).py" and "Ex1,2(WV).py".
+
+
+================================================================================================================================
+OUTPUT FROM CODE:
+
+
+
+
+EXERCISE 1:  Logistic Regression Classifier
+============================================
+Training and testing model...
+ - Unigrams:
+-------------
+Results=
+[ 0.82   0.84   0.79   0.855  0.805  0.81   0.83   0.81   0.79   0.815]
+MEAN = 0.8165
+
+ - Bigrams:
+------------
+Results=
+[ 0.72   0.79   0.72   0.725  0.75   0.77   0.695  0.725  0.765  0.755]
+MEAN = 0.7415
+
+
